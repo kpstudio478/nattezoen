@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Check de kans op een natte zoen op basis van luchtvochtigheid, neerslag en UV-index.">
+    <title>De Natte Zoen Predictor 💋</title>
+    <style>
+        :root {
+            --primary: #ff416c;
+            --secondary: #ff4b2b;
+            --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --text-color: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(255, 65, 108, 0.15);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #c0392b;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #5d6d7e;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 65, 108, 0.6);
+        }
+
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #result {
+            margin-top: 30px;
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin: 20px 0;
+            background: -webkit-linear-gradient(#ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .weather-details {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .weather-details p {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+
+        .weather-details p:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .emoji {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+            font-style: italic;
+            color: #5d6d7e;
+        }
+
+        .privacy-note {
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: #7f8c8d;
+            line-height: 1.4;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>💋 Natte Zoen Predictor</h1>
+        <p class="subtitle">Check om te weten of je op een natte zoen kunt rekenen.</p>
+        
+        <button id="checkBtn" class="btn">Check de natte zoen-kans</button>
+        <p id="loading" class="loading">De romantische weersensoren aan het raadplegen...</p>
+
+        <div id="result">
+            <span id="emoji" class="emoji">🤔</span>
+            <h2 id="verdict">...</h2>
+            <div id="score" class="score-display">0%</div>
+            <p id="advice">Advies komt hier...</p>
+            
+            <div class="weather-details">
+                <p><span>🌡️ Temperatuur:</span> <strong id="temp">-</strong></p>
+                <p><span>💧 Luchtvochtigheid:</span> <strong id="humidity">-</strong></p>
+                <p><span>🌧️ Neerslagkans:</span> <strong id="precip">-</strong></p>
+                <p><span>☀️ UV-index:</span> <strong id="uv">-</strong></p>
+            </div>
+        </div>
+
+        <div class="privacy-note">
+            🔒 <strong>Privacygarantie:</strong> Deze website gebruikt geen cookies en geen trackers. Alles wordt lokaal berekend op basis van openbare weerdata.
+        </div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('checkBtn');
+        const loading = document.getElementById('loading');
+        const resultDiv = document.getElementById('result');
+
+        // Coördinaten van Utrecht
+        const UTRECHT_LAT = 52.0907;
+        const UTRECHT_LON = 5.1214;
+
+        btn.addEventListener('click', () => {
+            btn.disabled = true;
+            btn.textContent = "Data ophalen...";
+            loading.style.display = 'block';
+            resultDiv.style.display = 'none';
+            
+            fetchWeather(UTRECHT_LAT, UTRECHT_LON);
+        });
+
+        async function fetchWeather(lat, lon) {
+            try {
+                // Open-Meteo API: Vraagt temperatuur, luchtvochtigheid, UV-index en neerslagkans op.
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,uv_index&daily=precipitation_probability_max&timezone=Europe/Amsterdam`;
+                
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const temp = data.current.temperature_2m;
+                const humidity = data.current.relative_humidity_2m;
+                const uvIndex = data.current.uv_index;
+                const precipProb = data.daily.precipitation_probability_max[0];
+
+                updateUI(temp, humidity, uvIndex, precipProb);
+            } catch (error) {
+                console.error("Fout bij ophalen weerdata:", error);
+                loading.textContent = "Oeps, er ging iets mis met het ophalen van de weerdata.";
+                btn.disabled = false;
+                btn.textContent = "Opnieuw proberen";
+            }
+        }
+
+        function updateUI(temp, humidity, uvIndex, precipProb) {
+            loading.style.display = 'none';
+            btn.disabled = false;
+            btn.textContent = "Opnieuw checken";
+            resultDiv.style.display = 'block';
+
+            document.getElementById('temp').textContent = `${temp}°C`;
+            document.getElementById('humidity').textContent = `${humidity}%`;
+            document.getElementById('precip').textContent = `${precipProb}%`;
+            document.getElementById('uv').textContent = uvIndex;
+
+            // De "Natte Zoen" Logica
+            // We combineren neerslagkans (50%) en luchtvochtigheid (50%) voor de 'natheid' score.
+            const wetnessScore = Math.min(100, Math.round((precipProb * 0.5) + (humidity * 0.5)));
+
+            const scoreEl = document.getElementById('score');
+            const verdictEl = document.getElementById('verdict');
+            const adviceEl = document.getElementById('advice');
+            const emojiEl = document.getElementById('emoji');
+
+            scoreEl.textContent = `${wetnessScore}%`;
+
+            // Bepaal het advies op basis van de score én de UV-index
+            let uvWarning = "";
+            if (uvIndex >= 6) {
+                uvWarning = " ⚠️ Let op: de UV-index is hoog! Smeer je lippen in met SPF, anders wordt die zoen schuurpapier.";
+            } else if (uvIndex >= 3) {
+                uvWarning = " 💡 Tip: een matige UV-index. Een lippenbalsem is geen overbodige luxe voor een zachte zoen.";
+            }
+
+            if (wetnessScore >= 65) {
+                emojiEl.textContent = "🌧️💋💦";
+                verdictEl.textContent = "Grote kans op een natte zoen!";
+                adviceEl.textContent = `De lucht is vochtig of het gaat regenen. De lippen zijn van nature al nat (of je staat gewoon in de regen).${uvWarning}`;
+                scoreEl.style.background = "-webkit-linear-gradient(#ff416c, #ff4b2b)";
+                scoreEl.style.webkitBackgroundClip = "text";
+            } else if (wetnessScore >= 40) {
+                emojiEl.textContent = "🤔💋";
+                verdictEl.textContent = "Misschien een vleugje vocht...";
+                adviceEl.textContent = `Het is niet extreem nat, maar ook niet kurkdroog. Een zoen kan alle kanten op.${uvWarning}`;
+                scoreEl.style.background = "-webkit-linear-gradient(#f2994a, #f2c94c)";
+                scoreEl.style.webkitBackgroundClip = "text";
+            } else {
+                emojiEl.textContent = "😘🏜️";
+                verdictEl.textContent = "Droge boel!";
+                adviceEl.textContent = `Lage luchtvochtigheid en geen regen. De kans op een spontane natte zoen is klein.${uvWarning}`;
+                scoreEl.style.background = "-webkit-linear-gradient(#11998e, #38ef7d)";
+                scoreEl.style.webkitBackgroundClip = "text";
+            }
+        }
+    </script>
+</body>
+</html>
