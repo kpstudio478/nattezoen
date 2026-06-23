@@ -145,6 +145,23 @@
             border-top: 1px solid rgba(0,0,0,0.1);
         }
 
+        footer {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #7f8c8d;
+        }
+
+        footer a {
+            color: #c0392b;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -181,9 +198,13 @@
         </div>
 
         <div class="privacy-note">
-            🔒 <strong>Privacygarantie:</strong> Deze website gebruikt geen cookies en geen trackers. Alles wordt lokaal berekend op basis van openbare weerdata.
+            🔒 <strong>Privacygarantie:</strong> Deze website gebruikt geen cookies. Voor het ophalen van de weerdata wordt eenmalig verbinding gemaakt met Open-Meteo; voor anonieme bezoekstatistieken met Plausible. Geen van beide gebruikt cookies of volgt je over websites heen.
         </div>
     </div>
+
+    <footer>
+        <a href="privacy.html">Privacyverklaring</a>
+    </footer>
 
     <script>
         const btn = document.getElementById('checkBtn');
