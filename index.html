@@ -1,142 +1,253 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>De Natte Zoen Predictor 💋</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-        }
-        
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-        
-        .predictor-container {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-        }
-        
-        h1 {
-            color: #667eea;
-            margin-bottom: 1rem;
-            font-size: 2rem;
-        }
-        
-        .button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin: 1rem 0;
-            transition: transform 0.2s;
-        }
-        
-        .button:hover {
-            transform: translateY(-2px);
-        }
-        
-        .result {
-            margin: 1.5rem 0;
-            font-size: 3rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .advice {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-        }
-        
-        .weather-info {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 1rem;
-            text-align: left;
-        }
-        
-        .weather-item {
-            background: #f8f9fa;
-            padding: 0.5rem;
-            border-radius: 5px;
-        }
-        
-        footer {
-            background: rgba(255,255,255,0.1);
-            padding: 1.5rem;
-            text-align: center;
-            margin-top: auto;
-            width: 100%;
-        }
-        
-        footer a {
-            color: white;
-            text-decoration: none;
-            margin: 0 0.5rem;
-            transition: opacity 0.2s;
-        }
-        
-        footer a:hover {
-            opacity: 0.8;
-            text-decoration: underline;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Natte Zoen Predictor 💋</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #ffe0ec 0%, #ffb6d5 50%, #ff8fbf 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #5a1a3a;
+  }
+  .container {
+    background: #fff;
+    border-radius: 24px;
+    padding: 32px 28px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 50px rgba(255, 105, 180, 0.3);
+    text-align: center;
+    border: 3px solid #ff8fbf;
+  }
+  h1 {
+    color: #d6336c;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    color: #a04070;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  .check-btn {
+    background: linear-gradient(135deg, #ff6fa5, #d6336c);
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 6px 18px rgba(214, 51, 108, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .check-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(214, 51, 108, 0.5);
+  }
+  .check-btn:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+  .status {
+    margin: 18px 0 10px;
+    font-size: 0.95rem;
+    color: #a04070;
+    min-height: 24px;
+  }
+  .percentage {
+    font-size: 4rem;
+    font-weight: 800;
+    color: #d6336c;
+    margin: 10px 0;
+    text-shadow: 0 2px 8px rgba(214, 51, 108, 0.2);
+  }
+  .advice {
+    background: #ffe0ec;
+    border-left: 4px solid #ff6fa5;
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin: 14px 0;
+    font-size: 0.95rem;
+    color: #5a1a3a;
+    min-height: 48px;
+    line-height: 1.4;
+  }
+  .weather-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 0.9rem;
+  }
+  .weather-item {
+    background: #fff0f6;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid #ffd1e3;
+  }
+  footer {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: #a04070;
+  }
+  footer a { color: #d6336c; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
-    <main>
-        <div class="predictor-container">
-            <h1>💋 Natte Zoen Predictor</h1>
-            <p>Check om te weten of je op een natte zoen kunt rekenen.</p>
-            
-            <button class="button" onclick="checkNatteZoen()">
-                Check de natte zoen-kans
-            </button>
-            
-            <div class="result" id="result">0%</div>
-            
-            <div class="advice" id="advice">
-                Advies komt hier...
-            </div>
-            
-            <div class="weather-info">
-                <div class="weather-item">🌡️ Temperatuur: <span id="temp">-</span></div>
-                <div class="weather-item">💧 Luchtvochtigheid: <span id="humidity">-</span></div>
-                <div class="weather-item">🌧️ Neerslagkans: <span id="precip">-</span></div>
-                <div class="weather-item">☀️ UV-index: <span id="uv">-</span></div>
-            </div>
-        </div>
-    </main>
-    
+  <div class="container">
+    <h1>💋 Natte Zoen Predictor</h1>
+    <p class="subtitle">Ontdek of jouw volgende zoen een verfrissende plons wordt of een droog liefdesmoment.</p>
+
+    <button class="check-btn" id="checkBtn">💦 Wordt het een natte zoen?</button>
+
+    <div class="status" id="status"></div>
+    <div class="percentage" id="percentage">0%</div>
+    <div class="advice" id="advice">Druk op de knop voor jouw liefdesweervoorspelling...</div>
+
+    <div class="weather-grid">
+      <div class="weather-item">🌡️ Temperatuur: <span id="temp">-</span></div>
+      <div class="weather-item">💧 Luchtvochtigheid: <span id="hum">-</span></div>
+      <div class="weather-item">🌧️ Neerslagkans: <span id="precip">-</span></div>
+      <div class="weather-item">☀️ UV-index: <span id="uv">-</span></div>
+    </div>
+
     <footer>
-        <a href="privacy.html">Privacyverklaring</a> · kpstudio478@gmail.com 
+      <a href="privacy.html">Privacyverklaring</a> · 
+      <a href="mailto:kpstudio478@gmail.com">kpstudio478@gmail.com</a>
     </footer>
+  </div>
+
+<script>
+const btn = document.getElementById('checkBtn');
+const statusEl = document.getElementById('status');
+const percEl = document.getElementById('percentage');
+const adviceEl = document.getElementById('advice');
+const tempEl = document.getElementById('temp');
+const humEl = document.getElementById('hum');
+const precipEl = document.getElementById('precip');
+const uvEl = document.getElementById('uv');
+
+// Vaste coördinaten voor 's-Hertogenbosch
+const LAT = 51.6978;
+const LON = 5.3037;
+
+// Speelse adviezen per kansniveau
+const advices = {
+  super: [
+    '💦 Jackpot! Jouw zoen wordt een heuse plons. Vergeet je handdoek niet!',
+    '💦 Topkans! Cupido heeft de tuinslang alvast klaargezet.',
+    '💦 Spoel maar vast een emmer water in. Dit wordt een kletsnatte kus!'
+  ],
+  hoog: [
+    '💧 Grote kans op spetters! Romantiek met een frisse toets.',
+    '💧 Het wordt lekker vochtig tussen jullie. Durf je het aan?',
+    '💧 Bereid je voor op een zoen met een regenachtig randje.'
+  ],
+  midden: [
+    '😘 Het kan alle kanten op — een tikje nat, een tikje droog. Spannend!',
+    '😘 Een zoen met een verrassingseffect. Laat je overrompelen!',
+    '😘 Gouden middenweg: niet te droog, niet te nat. Precies goed.'
+  ],
+  laag: [
+    '🌸 De kans op nat is klein. Houd het lekker droog en knus.',
+    '🌸 Vrijwel een droge kus. Romantisch zonder plonsgevaar.',
+    '🌸 Het blijft vandaag lekker droog op lippengebied.'
+  ],
+  droog: [
+    '☀️ Vrijwel geen natte zoen in de lucht. Perfect voor een zachte, droge kus.',
+    '☀️ Droog weer, droge zoen. Ideaal voor een teder moment.',
+    '☀️ De zon lacht je toe — en je lippen blijven droog!'
+  ]
+};
+
+function randomPick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+btn.addEventListener('click', async () => {
+  btn.disabled = true;
+  statusEl.textContent = '💘 Cupido raadpleegt de wolken...';
+  percEl.textContent = '0%';
+  adviceEl.textContent = 'De liefdesmeteorologen zijn bezig...';
+
+  try {
+    // Haal weerdata op via Open-Meteo voor 's-Hertogenbosch
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,relative_humidity_2m,precipitation,precipitation_probability,weather_code,uv_index&timezone=auto`;
+    const wRes = await fetch(url);
+    const w = await wRes.json();
+    const c = w.current;
+
+    const temp = c.temperature_2m;
+    const hum = c.relative_humidity_2m;
+    const precipProb = c.precipitation_probability ?? 0;
+    const precip = c.precipitation;
+    const uv = c.uv_index ?? 0;
+    const code = c.weather_code;
+
+    tempEl.textContent = temp + '°C';
+    humEl.textContent = hum + '%';
+    precipEl.textContent = precipProb + '%';
+    uvEl.textContent = uv.toFixed(1);
+
+    // Bereken "natte zoen-kans" op basis van weer
+    let chance = 50;
+    // Hoge luchtvochtigheid = natter = meer kans
+    chance += (hum - 50) * 0.5;
+    // Neerslagkans verhoogt de kans flink
+    chance += (precipProb - 30) * 0.5;
+    // Werkelijke regen verhoogt extra
+    chance += precip * 10;
+    // Zonnig/bewolkt weer = minder nat
+    if (code <= 2) chance -= 15;
+    // Kou verlaagt de kans
+    if (temp < 10) chance -= 15;
+    if (temp > 25) chance += 5;
+
+    chance = Math.max(0, Math.min(100, Math.round(chance)));
+
+    // Animateer percentage
+    animateNumber(percEl, 0, chance, 900);
+
+    // Kies speels advies op basis van kans
+    let advice;
+    if (chance >= 80) advice = randomPick(advices.super);
+    else if (chance >= 60) advice = randomPick(advices.hoog);
+    else if (chance >= 40) advice = randomPick(advices.midden);
+    else if (chance >= 20) advice = randomPick(advices.laag);
+    else advice = randomPick(advices.droog);
+
+    adviceEl.textContent = advice;
+    statusEl.textContent = '📍 Liefdesweervoorspelling voor \'s-Hertogenbosch';
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = '⚠️ Oeps! De liefdesmeteorologen zijn de weg kwijt.';
+    adviceEl.textContent = 'Controleer je internetverbinding en waag nog een poging.';
+    percEl.textContent = '?%';
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+function animateNumber(el, from, to, duration) {
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    el.textContent = Math.round(from + (to - from) * p) + '%';
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+</script>
 </body>
 </html>
