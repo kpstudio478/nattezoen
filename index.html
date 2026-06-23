@@ -107,13 +107,13 @@
 <body>
   <div class="container">
     <h1>💋 Natte Zoen Predictor</h1>
-    <p class="subtitle">Ontdek of jouw volgende zoen een verfrissende plons wordt of een droog liefdesmoment.</p>
+    <p class="subtitle">Ontdek of jouw volgende zoen een verfrissende plons wordt of een droog, liefdevol moment.</p>
 
     <button class="check-btn" id="checkBtn">💦 Wordt het een natte zoen?</button>
 
     <div class="status" id="status"></div>
     <div class="percentage" id="percentage">0%</div>
-    <div class="advice" id="advice">Druk op de knop voor jouw liefdesweervoorspelling...</div>
+    <div class="advice" id="advice">Druk op de knop voor jouw liefdesweersvoorspelling...</div>
 
     <div class="weather-grid">
       <div class="weather-item">🌡️ Temperatuur: <span id="temp">-</span></div>
@@ -123,8 +123,10 @@
     </div>
 
     <footer>
-      <a href="privacy.html">Privacyverklaring</a> · 
-      <a href="mailto:kpstudio478@gmail.com">kpstudio478@gmail.com</a>
+      <a href="privacy.html">Privacyverklaring</a> · kpstudio478@gmail.com
+      <div style="margin-top:8px;font-size:0.75rem;">
+        Geen cookies of tracking. Weergegevens worden opgehaald via Open‑Meteo.
+      </div>
     </footer>
   </div>
 
@@ -147,7 +149,7 @@ const advices = {
   super: [
     '💦 Jackpot! Jouw zoen wordt een heuse plons. Vergeet je handdoek niet!',
     '💦 Topkans! Cupido heeft de tuinslang alvast klaargezet.',
-    '💦 Spoel maar vast een emmer water in. Dit wordt een kletsnatte kus!'
+    '💦 Zet maar vast een emmer water klaar. Dit wordt een kletsnatte kus!'
   ],
   hoog: [
     '💧 Grote kans op spetters! Romantiek met een frisse toets.',
@@ -228,7 +230,7 @@ btn.addEventListener('click', async () => {
     else advice = randomPick(advices.droog);
 
     adviceEl.textContent = advice;
-    statusEl.textContent = '📍 Liefdesweervoorspelling voor \'s-Hertogenbosch';
+    statusEl.textContent = '';
   } catch (err) {
     console.error(err);
     statusEl.textContent = '⚠️ Oeps! De liefdesmeteorologen zijn de weg kwijt.';
